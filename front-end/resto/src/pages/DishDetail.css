@@ -1,0 +1,73 @@
+.dish-detail {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  
+  .dish-image-container {
+    width: 100%;
+  }
+  
+  .dish-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .dish-info {
+    padding: 1rem;
+  }
+  
+  .dish-info h1 {
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .dish-description {
+    color: #666;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  
+  .dish-details {
+    margin-bottom: 2rem;
+  }
+  
+  .dish-ingredients {
+    margin-bottom: 1rem;
+  }
+  
+  .dish-price {
+    font-size: 1.2rem;
+    color: #F2B705;
+  }
+  
+  .add-to-cart {
+    background-color: #F2B705;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background-color 0.3s;
+  }
+  
+  .add-to-cart:hover {
+    background-color: #d9a404;
+  }
+  
+  @media (max-width: 768px) {
+    .dish-detail {
+      grid-template-columns: 1fr;
+    }
+    
+    .dish-image {
+      height: 300px;
+    }
+  }

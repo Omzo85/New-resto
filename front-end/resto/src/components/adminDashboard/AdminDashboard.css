@@ -1,0 +1,327 @@
+/* Styles existants */
+.admin-dashboard {
+    min-height: 100vh;
+    background-color: #f5f5f5;
+  }
+  
+  .dashboard-header {
+    background-color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dashboard-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #2d3748;
+  }
+  
+  .logout-button {
+    background-color: #f56565;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .logout-button:hover {
+    background-color: #e53e3e;
+  }
+  
+  .dashboard-nav {
+    background-color: white;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .tab-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #4a5568;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+  }
+  
+  .tab-button.active {
+    color: #4299e1;
+    border-bottom: 2px solid #4299e1;
+  }
+  
+  .dashboard-content {
+    padding: 2rem;
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .add-button {
+    background-color: #48bb78;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .add-button:hover {
+    background-color: #38a169;
+  }
+  
+  /* Styles pour les tableaux */
+  .dishes-table,
+  .users-table,
+  .orders-table {
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  th {
+    background-color: #f7fafc;
+    font-weight: 600;
+    color: #4a5568;
+  }
+  
+  /* Styles pour les miniatures d'images */
+  .dish-thumbnail {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
+  /* Styles pour les boutons d'action */
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .edit-button,
+  .delete-button,
+  .view-button {
+    padding: 0.25rem 0.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .edit-button {
+    background-color: #4299e1;
+    color: white;
+  }
+  
+  .edit-button:hover {
+    background-color: #3182ce;
+  }
+  
+  .delete-button {
+    background-color: #f56565;
+    color: white;
+  }
+  
+  .delete-button:hover {
+    background-color: #e53e3e;
+  }
+  
+  .view-button {
+    background-color: #48bb78;
+    color: white;
+  }
+  
+  .view-button:hover {
+    background-color: #38a169;
+  }
+  
+  /* Styles pour le modal */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .modal-content h2 {
+    margin-bottom: 1.5rem;
+    color: #2d3748;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #4a5568;
+    font-weight: 500;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .save-button {
+    background-color: #48bb78;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .save-button:hover {
+    background-color: #38a169;
+  }
+  
+  .cancel-button {
+    background-color: #e2e8f0;
+    color: #4a5568;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .cancel-button:hover {
+    background-color: #cbd5e0;
+  }
+  
+  /* Styles pour les statuts de commande */
+  .status-select {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .status-en_attente {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+  
+  .status-en_preparation {
+    background-color: #e0f2fe;
+    color: #075985;
+  }
+  
+  .status-en_livraison {
+    background-color: #f3e8ff;
+    color: #6b21a8;
+  }
+  
+  .status-livre {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+  
+  .status-annule {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+  
+  /* Design responsive */
+  @media (max-width: 1024px) {
+    .dashboard-nav {
+      flex-wrap: wrap;
+    }
+    
+    .tab-button {
+      flex: 1;
+      text-align: center;
+    }
+    
+    .action-buttons {
+      flex-direction: column;
+    }
+  
+    .modal-content {
+      width: 95%;
+      padding: 1rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-content {
+      padding: 1rem;
+    }
+    
+    th, td {
+      padding: 0.5rem;
+    }
+    
+    .section-header {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .add-button {
+      width: 100%;
+    }
+  
+    .modal-actions {
+      flex-direction: column;
+    }
+  
+    .modal-actions button {
+      width: 100%;
+    }
+  }
