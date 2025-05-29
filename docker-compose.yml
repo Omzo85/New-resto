@@ -14,6 +14,11 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -33,25 +38,25 @@ services:
     container_name: backend
     restart: always
     environment:
-      DB_HOST: ${DB_HOST}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
-      # The following hardcoded values are redundant and override the above variables:
-      # DB_USER: user
-      # DB_PASSWORD: userpassword
-      # DB_NAME: mydatabase
+      DB_HOST: mysql
+      DB_USER: user
+      DB_PASSWORD: userpassword
+      DB_NAME: mydatabase
+      PORT: 5000
     ports:
       - "5000:5000"
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
 
   frontend:
     build: ./front-end/resto
     container_name: frontend
     restart: always
+    environment:
+      VITE_API_URL: http://localhost:5000
     ports:
-      - "3000:3000"
+      - "5173:5173"
     depends_on:
       - backend
 
