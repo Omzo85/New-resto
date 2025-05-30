@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
-import { dishes } from '../../data/dishes.js';
+import { dishes } from '../../data/Dishes.jsx';
 import './Menu.css';
 
 function Menu() {

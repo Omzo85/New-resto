@@ -8,7 +8,7 @@ import DishDetail from './pages/DishDetail';
 import Cart from './pages/Cart';
 import { AuthProvider } from './context/AuthContext';
 import Footer from './components/Footer/Footer';
-import ProtectedAdminRoute from './components/ProtectedAdminRoute';
+import ProtectedAdminRoute from './ProtectedAdminRoute';
 import AdminDashboard from './components/adminDashboard/AdminDashboard';
 import Header from './components/Header/Header';
 import NotFound from './pages/NotFound';
