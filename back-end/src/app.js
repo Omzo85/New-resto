@@ -26,7 +26,7 @@ sequelize.sync()
   .catch(err => console.error('Database sync error:', err));
 
 // Set up routes 
-// app.use('/api/auth', authRoutes);
+ app.use('/api/auth', authRoutes);
 
 // Basic route for testing
 
