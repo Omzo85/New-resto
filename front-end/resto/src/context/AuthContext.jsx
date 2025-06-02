@@ -1,5 +1,6 @@
 // src/context/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 // Définissez l'URL de base de votre backend Node.js
 // IMPORTANT : Adaptez ce chemin si votre backend n'est pas sur localhost:3001
@@ -13,21 +14,25 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true); // Gère l'état de chargement initial
 
   useEffect(() => {
-    const loadUserFromStorage = () => {
+    const loadUserFromStorage = async () => {
       try {
-        const storedToken = localStorage.getItem('accessToken');
-        if (storedToken) {
-          // Décoder le token pour récupérer les infos utilisateur (ID, email)
-          // La partie payload du JWT est la deuxième section encodée en base64
-          const payload = JSON.parse(atob(storedToken.split('.')[1]));
-          // Ici, on stocke un objet user avec l'ID, l'email et le token pour faciliter l'accès
-          setUser({ id: payload.id, email: payload.email, token: storedToken });
-        }
+      const storedToken = localStorage.getItem('accessToken');
+      if (storedToken) {
+        // Utiliser axios pour vérifier la validité du token auprès du backend
+        const response = await axios.get(`${API_BASE_URL}/verify-token`, {
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+        });
+
+        const { id, email } = response.data; // Récupérer les infos utilisateur depuis la réponse
+        setUser({ id, email, token: storedToken }); // Mettre à jour l'état utilisateur
+      }
       } catch (err) {
-        console.error("Erreur lors du décodage du token JWT :", err);
-        localStorage.removeItem('accessToken'); // Nettoyer le token invalide
+      console.error("Erreur lors de la vérification du token JWT :", err);
+      localStorage.removeItem('accessToken'); // Nettoyer le token invalide
       } finally {
-        setLoading(false); // Fin du chargement, que le token soit valide ou non
+      setLoading(false); // Fin du chargement, que le token soit valide ou non
       }
     };
 
