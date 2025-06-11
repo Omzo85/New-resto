@@ -10,4 +10,5 @@ COPY . .
 
 EXPOSE 5173
 
-CMD ["npm", "run", "dev", "--", "--host"]
+# Correction ici : Exécute la commande via /bin/sh -c pour une meilleure compatibilité
+CMD ["/bin/sh", "-c", "npm run dev -- --host 0.0.0.0"]
