@@ -1,159 +1,170 @@
 // src/controllers/cartController.js
-const CartItem = require('../models/cartItemModel'); // Importez le modèle CartItem
-const Dish = require('../models/dishModel');       // Importez le modèle Dish
+const CartItem = require('../models/cartItemModel'); // Assurez-vous que ce chemin est correct
+const Dish = require('../models/dishModel'); // Importez le modèle Dish pour récupérer les détails du plat
 
 class CartController {
-  // Récupérer le panier d'un utilisateur
-  async getCart(req, res) {
-    try {
-      const userId = req.userId; // L'ID utilisateur vient du middleware d'authentification
-      if (!userId) {
-        return res.status(401).json({ message: 'User not authenticated.' });
-      }
+    // Récupérer le panier d'un utilisateur
+    async getCart(req, res) {
+        // req.userId est défini par authMiddleware et contient l'ID de l'utilisateur authentifié.
+        const userId = req.userId;
+        console.log(`CartController: Tentative de récupération du panier pour userId: ${userId}`);
 
-      // Récupérer les articles du panier pour cet utilisateur, en incluant les détails des plats
-      const cartItems = await CartItem.findAll({
-        where: { user_id: userId },
-        include: [{
-          model: Dish,
-          attributes: ['id', 'name', 'price', 'image_url', 'description'] // Attributs du plat à inclure
-        }]
-      });
+        try {
+            // Récupérer les articles du panier pour cet utilisateur, en incluant les détails du plat associé
+            const cartItems = await CartItem.findAll({
+                where: { userId: userId },
+                include: [{
+                    model: Dish,
+                    attributes: ['id', 'name', 'price', 'image_url'] // Récupère les infos nécessaires du plat
+                }]
+            });
 
-      // Formater la réponse pour inclure les détails du plat directement dans l'article du panier
-      const formattedCart = cartItems.map(item => ({
-        id: item.id,
-        dishId: item.dish_id, // L'ID du plat (maintenant une chaîne de caractères)
-        name: item.Dish.name,
-        price: parseFloat(item.Dish.price), // Assurez-vous que le prix est un nombre
-        image: item.Dish.image_url,
-        description: item.Dish.description,
-        quantity: item.quantity,
-      }));
+            // Mapper les résultats pour correspondre au format attendu par le frontend (DishId, Name, Price, Image, Quantity)
+            const formattedCartItems = cartItems.map(item => ({
+                dishId: item.dishId,
+                name: item.Dish.name,       // Nom du plat
+                price: item.Dish.price,     // Prix du plat
+                image: item.Dish.image_url, // URL de l'image du plat
+                quantity: item.quantity
+            }));
 
-      res.status(200).json(formattedCart);
-    } catch (error) {
-      console.error("Erreur lors de la récupération du panier :", error);
-      res.status(500).json({ message: 'Erreur lors du chargement du panier.', error: error.message });
+            console.log(`CartController: Panier récupéré pour userId ${userId}:`, formattedCartItems);
+            res.status(200).json(formattedCartItems);
+        } catch (error) {
+            console.error(`CartController: Erreur lors de la récupération du panier pour userId ${userId}:`, error);
+            res.status(500).json({ message: 'Erreur serveur lors de la récupération du panier.', error: error.message });
+        }
     }
-  }
 
-  // Ajouter un plat au panier (ou augmenter la quantité)
-  async addToCart(req, res) {
-    try {
-      const userId = req.userId;
-      const { dishId, quantity } = req.body;
+    // Ajouter un plat au panier
+    async addToCart(req, res) {
+        const { dishId, quantity } = req.body;
+        const userId = req.userId; // L'ID de l'utilisateur provient du token JWT
 
-      if (!userId || !dishId || !quantity) {
-        return res.status(400).json({ message: 'Missing required fields: userId, dishId, quantity.' });
-      }
+        console.log(`CartController: Tentative d'ajout au panier. userId: ${userId}, dishId: ${dishId}, quantity: ${quantity}`);
 
-      // Vérifier si le plat existe (dishId est maintenant une chaîne de caractères)
-      const dish = await Dish.findByPk(dishId);
-      if (!dish) {
-        return res.status(404).json({ message: 'Plat non trouvé.' });
-      }
+        if (!dishId || !quantity || quantity <= 0) {
+            console.warn(`CartController: Données invalides pour l'ajout au panier. dishId: ${dishId}, quantity: ${quantity}`);
+            return res.status(400).json({ message: 'L\'ID du plat et la quantité sont obligatoires et la quantité doit être supérieure à zéro.' });
+        }
 
-      // Chercher si l'article existe déjà dans le panier de l'utilisateur
-      let cartItem = await CartItem.findOne({
-        where: { user_id: userId, dish_id: dishId }
-      });
+        try {
+            // 1. Vérifier si le plat existe dans la table DISHES
+            const dish = await Dish.findByPk(dishId);
+            if (!dish) {
+                console.warn(`CartController: Plat non trouvé dans la base de données. dishId: ${dishId}`);
+                return res.status(404).json({ message: 'Plat non trouvé.' });
+            }
 
-      if (cartItem) {
-        // Si l'article existe, mettre à jour la quantité
-        cartItem.quantity += quantity;
-        await cartItem.save();
-      } else {
-        // Si l'article n'existe pas, le créer
-        cartItem = await CartItem.create({
-          user_id: userId,
-          dish_id: dishId,
-          quantity: quantity
-        });
-      }
+            // 2. Vérifier si l'article existe déjà dans le panier de l'utilisateur
+            let cartItem = await CartItem.findOne({
+                where: {
+                    userId: userId,
+                    dishId: dishId
+                }
+            });
 
-      res.status(200).json({ message: 'Plat ajouté au panier avec succès.', item: cartItem });
-    } catch (error) {
-      console.error("Erreur lors de l'ajout au panier :", error);
-      res.status(500).json({ message: "Erreur lors de l'ajout au panier.", error: error.message });
+            if (cartItem) {
+                // Si l'article existe, mettre à jour la quantité
+                cartItem.quantity += quantity;
+                await cartItem.save();
+                console.log(`CartController: Quantité du plat ${dishId} mise à jour dans le panier. Nouvelle quantité: ${cartItem.quantity}`);
+                res.status(200).json({ message: 'Quantité du plat mise à jour dans le panier.', cartItem });
+            } else {
+                // Si l'article n'existe pas, l'ajouter
+                cartItem = await CartItem.create({
+                    userId: userId,
+                    dishId: dishId,
+                    quantity: quantity
+                });
+                console.log(`CartController: Plat ${dishId} ajouté au panier.`);
+                res.status(201).json({ message: 'Plat ajouté au panier.', cartItem });
+            }
+        } catch (error) {
+            console.error(`CartController: Erreur serveur lors de l'ajout au panier pour userId ${userId}, dishId ${dishId}:`, error);
+            res.status(500).json({ message: 'Erreur serveur lors de l\'ajout au panier.', error: error.message });
+        }
     }
-  }
 
-  // Supprimer un plat du panier
-  async removeFromCart(req, res) {
-    try {
-      const userId = req.userId;
-      const { dishId } = req.params; // dishId est une chaîne de caractères
+    // Supprimer un plat du panier
+    async removeFromCart(req, res) {
+        const { dishId } = req.params; // L'ID du plat à supprimer
+        const userId = req.userId;
 
-      if (!userId || !dishId) {
-        return res.status(400).json({ message: 'Missing required fields: userId, dishId.' });
-      }
+        console.log(`CartController: Tentative de suppression du plat. userId: ${userId}, dishId: ${dishId}`);
 
-      const deletedCount = await CartItem.destroy({
-        where: { user_id: userId, dish_id: dishId }
-      });
+        try {
+            const result = await CartItem.destroy({
+                where: {
+                    userId: userId,
+                    dishId: dishId
+                }
+            });
 
-      if (deletedCount === 0) {
-        return res.status(404).json({ message: 'Article non trouvé dans le panier.' });
-      }
-
-      res.status(200).json({ message: 'Plat supprimé du panier avec succès.' });
-    } catch (error) {
-      console.error("Erreur lors de la suppression du panier :", error);
-      res.status(500).json({ message: "Erreur lors de la suppression du panier.", error: error.message });
+            if (result === 0) {
+                console.warn(`CartController: Article non trouvé dans le panier pour suppression. userId: ${userId}, dishId: ${dishId}`);
+                return res.status(404).json({ message: 'Article non trouvé dans le panier.' });
+            }
+            console.log(`CartController: Plat ${dishId} supprimé du panier.`);
+            res.status(200).json({ message: 'Plat supprimé du panier.' });
+        } catch (error) {
+            console.error(`CartController: Erreur serveur lors de la suppression du panier pour userId ${userId}, dishId ${dishId}:`, error);
+            res.status(500).json({ message: 'Erreur serveur lors de la suppression du plat du panier.', error: error.message });
+        }
     }
-  }
 
-  // Mettre à jour la quantité d'un plat dans le panier
-  async updateQuantity(req, res) {
-    try {
-      const userId = req.userId;
-      const { dishId, quantity } = req.body; // dishId est une chaîne de caractères
+    // Mettre à jour la quantité d'un plat dans le panier
+    async updateQuantity(req, res) {
+        const { dishId, quantity } = req.body;
+        const userId = req.userId;
 
-      if (!userId || !dishId || quantity === undefined) {
-        return res.status(400).json({ message: 'Missing required fields: userId, dishId, quantity.' });
-      }
-      
-      // Si la quantité est 0 ou moins, on supprime l'article
-      if (quantity <= 0) {
-        return await this.removeFromCart(req, res); // Réutiliser la fonction de suppression
-      }
+        console.log(`CartController: Tentative de mise à jour de la quantité. userId: ${userId}, dishId: ${dishId}, newQuantity: ${quantity}`);
 
-      const [updatedCount] = await CartItem.update(
-        { quantity: quantity },
-        { where: { user_id: userId, dish_id: dishId } }
-      );
+        if (!dishId || !quantity || quantity <= 0) {
+            console.warn(`CartController: Données invalides pour la mise à jour de la quantité. dishId: ${dishId}, quantity: ${quantity}`);
+            return res.status(400).json({ message: 'L\'ID du plat et la quantité sont obligatoires et la quantité doit être supérieure à zéro.' });
+        }
 
-      if (updatedCount === 0) {
-        return res.status(404).json({ message: 'Article non trouvé dans le panier pour mise à jour.' });
-      }
+        try {
+            const cartItem = await CartItem.findOne({
+                where: {
+                    userId: userId,
+                    dishId: dishId
+                }
+            });
 
-      res.status(200).json({ message: 'Quantité du plat mise à jour avec succès.' });
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour de la quantité :", error);
-      res.status(500).json({ message: "Erreur lors de la mise à jour de la quantité du plat.", error: error.message });
+            if (!cartItem) {
+                console.warn(`CartController: Article non trouvé dans le panier pour mise à jour de quantité. userId: ${userId}, dishId: ${dishId}`);
+                return res.status(404).json({ message: 'Article non trouvé dans le panier.' });
+            }
+
+            cartItem.quantity = quantity;
+            await cartItem.save();
+            console.log(`CartController: Quantité du plat ${dishId} mise à jour dans le panier. Nouvelle quantité: ${cartItem.quantity}`);
+            res.status(200).json({ message: 'Quantité du plat mise à jour.', cartItem });
+        } catch (error) {
+            console.error(`CartController: Erreur serveur lors de la mise à jour de la quantité pour userId ${userId}, dishId ${dishId}:`, error);
+            res.status(500).json({ message: 'Erreur serveur lors de la mise à jour de la quantité.', error: error.message });
+        }
     }
-  }
 
-  // Vider tout le panier d'un utilisateur
-  async clearCart(req, res) {
-    try {
-      const userId = req.userId;
+    // Vider tout le panier
+    async clearCart(req, res) {
+        const userId = req.userId;
 
-      if (!userId) {
-        return res.status(401).json({ message: 'User not authenticated.' });
-      }
+        console.log(`CartController: Tentative de vider le panier pour userId: ${userId}`);
 
-      await CartItem.destroy({
-        where: { user_id: userId }
-      });
-
-      res.status(200).json({ message: 'Panier vidé avec succès.' });
-    } catch (error) {
-      console.error("Erreur lors du vidage du panier :", error);
-      res.status(500).json({ message: "Erreur lors du vidage du panier.", error: error.message });
+        try {
+            await CartItem.destroy({
+                where: { userId: userId }
+            });
+            console.log(`CartController: Panier vidé pour userId: ${userId}`);
+            res.status(200).json({ message: 'Panier vidé avec succès.' });
+        } catch (error) {
+            console.error(`CartController: Erreur serveur lors du vidage du panier pour userId ${userId}:`, error);
+            res.status(500).json({ message: 'Erreur serveur lors du vidage du panier.', error: error.message });
+        }
     }
-  }
 }
 
 module.exports = new CartController();

@@ -16,19 +16,40 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  // username: { // Ce champ a été supprimé comme demandé
+  //   type: DataTypes.STRING,
+  //   allowNull: true,
+  //   unique: true
+  // },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true
   },
-  password: { // C'est le champ où le hachage du mot de passe sera stocké
+  password: { // C'est le champ où le hachage du mot de passe sera stocké (password_hash dans la DB)
     type: DataTypes.STRING,
     allowNull: false,
-    field: 'password_hash' // <-- CORRECTION ICI : Mappe le champ 'password' du modèle à la colonne 'password_hash' de la DB
+    field: 'password_hash' // Mappe le champ 'password' du modèle à la colonne 'password_hash' de la DB
   },
   role: {
     type: DataTypes.STRING,
     defaultValue: 'user' // Rôle par défaut
+  },
+  street_number: { // Nouveau champ d'adresse
+    type: DataTypes.STRING(10),
+    allowNull: false,
+  },
+  street_name: {   // Nouveau champ d'adresse
+    type: DataTypes.STRING(255),
+    allowNull: false,
+  },
+  postal_code: {   // Nouveau champ d'adresse
+    type: DataTypes.STRING(10),
+    allowNull: false,
+  },
+  city: {          // Nouveau champ d'adresse
+    type: DataTypes.STRING(255),
+    allowNull: false,
   }
 }, {
   tableName: 'USERS', // Nom de la table dans la BDD

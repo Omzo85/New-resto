@@ -5,8 +5,13 @@ const User = require('../models/userModel'); // Assurez-vous que le chemin vers 
 class AuthController {
   async register(req, res) {
     try {
-      // Déstructuration sans 'username', car il est supprimé
-      let { email, password_hash, role, nom, prenom } = req.body;
+      // Déstructuration pour récupérer tous les champs, y compris les adresses
+      let { email, password_hash, role, nom, prenom, street_number, street_name, postal_code, city } = req.body;
+
+      // Vérification des champs obligatoires pour l'adresse
+      if (!street_number || !street_name || !postal_code || !city) {
+          return res.status(400).json({ message: 'Tous les champs d\'adresse (numéro, rue, code postal, ville) sont obligatoires.' });
+      }
 
       console.log('Données reçues dans la requête POST /register :', req.body);
       console.log(`Tentative d'enregistrement de l'utilisateur avec email: ${email}`);
@@ -22,18 +27,35 @@ class AuthController {
       const hashedPassword = await bcrypt.hash(password_hash, 10);
       console.log(`Mot de passe haché pour l'utilisateur ${email}: ${hashedPassword}`);
 
-      // Créer un nouvel utilisateur sans 'username'
+      // Créer un nouvel utilisateur avec les champs d'adresse
       const newUser = await User.create({
         nom: nom,
         prenom: prenom,
         email: email,
         password: hashedPassword, // 'password' dans le modèle, 'password_hash' dans la DB
         role: role,
+        street_number: street_number, // Nouveau champ
+        street_name: street_name,     // Nouveau champ
+        postal_code: postal_code,     // Nouveau champ
+        city: city                    // Nouveau champ
       });
 
       console.log('Nouvel utilisateur enregistré avec succès :', newUser.email);
-      // Renvoyer les informations utilisateur (sans username)
-      res.status(201).json({ message: 'User registered successfully', user: { id: newUser.id, email: newUser.email, nom: newUser.nom, prenom: newUser.prenom, role: newUser.role } });
+      // Renvoyer les informations utilisateur
+      res.status(201).json({ 
+        message: 'User registered successfully', 
+        user: { 
+          id: newUser.id, 
+          email: newUser.email, 
+          nom: newUser.nom, 
+          prenom: newUser.prenom, 
+          role: newUser.role,
+          street_number: newUser.street_number, // Nouveau champ
+          street_name: newUser.street_name,     // Nouveau champ
+          postal_code: newUser.postal_code,     // Nouveau champ
+          city: newUser.city                    // Nouveau champ
+        } 
+      });
 
     } catch (error) {
       console.error('Erreur DETAILED lors de l\'enregistrement de l\'utilisateur :', error);
@@ -62,13 +84,23 @@ class AuthController {
       }
 
       // Générer un token JWT
-      const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' }); // Inclure le rôle dans le token si nécessaire
+      const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-      // Renvoyez l'objet utilisateur (sans le mot de passe et sans username) avec le token
+      // Renvoyez l'objet utilisateur (sans le mot de passe) avec le token et les infos d'adresse
       res.status(200).json({
         message: 'Login successful',
         token,
-        user: { id: user.id, email: user.email, nom: user.nom, prenom: user.prenom, role: user.role } // Mettre à jour ici aussi
+        user: { 
+          id: user.id, 
+          email: user.email, 
+          nom: user.nom, 
+          prenom: user.prenom, 
+          role: user.role,
+          street_number: user.street_number, // Nouveau champ
+          street_name: user.street_name,     // Nouveau champ
+          postal_code: user.postal_code,     // Nouveau champ
+          city: user.city                    // Nouveau champ
+        } 
       });
     } catch (error) {
       console.error('Erreur DETAILED lors de la connexion de l\'utilisateur :', error);

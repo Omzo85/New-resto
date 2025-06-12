@@ -1,35 +1,35 @@
 // src/models/dishModel.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Assurez-vous que ce chemin est correct
+const sequelize = require('../config/database');
 
 const Dish = sequelize.define('Dish', {
   id: {
-    type: DataTypes.STRING, // <-- CORRECTION : ID est une chaîne de caractères
-    primaryKey: true,
+    type: DataTypes.STRING(255), // Matches VARCHAR(255) in the database
+    primaryKey: true
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
   description: {
     type: DataTypes.TEXT,
-    allowNull: true, // Peut être nul
+    allowNull: true
   },
   price: {
     type: DataTypes.DECIMAL(10, 2),
-    allowNull: false,
+    allowNull: false
   },
   category: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
-  image_url: { // Correspond à image_url dans votre table
+  image_url: { // Corresponds to image_url in the database
     type: DataTypes.STRING,
-    allowNull: true, // Peut être nul
-  },
+    allowNull: true
+  }
 }, {
-  tableName: 'DISHES', // Assurez-vous que le nom de la table correspond à votre base de données
-  timestamps: false, // Pas de createdAt/updatedAt pour cette table si elle n'en a pas dans votre DB
+  tableName: 'DISHES', // Table name in the database
+  timestamps: false // If you don't want createdAt/updatedAt columns
 });
 
 module.exports = Dish;
