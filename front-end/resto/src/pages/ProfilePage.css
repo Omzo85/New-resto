@@ -1,0 +1,140 @@
+/* src/pages/ProfilePage.css */
+
+/* Conteneur principal de la page de profil, centré */
+.profile-container {
+    display: flex;
+    flex-direction: column; /* Organise le contenu en colonne */
+    align-items: center;    /* Centre horizontalement les éléments enfants */
+    min-height: calc(100vh - 100px); /* Hauteur minimale, ajuste pour la barre de navigation/pied de page */
+    padding: 20px;
+    background-color: #f8f8f8; /* Fond légèrement gris pour le contraste */
+    font-family: 'Inter', sans-serif; /* Assurez-vous que la police Inter est chargée */
+    color: #333;
+  }
+  
+  /* Titre principal du profil */
+  .profile-title {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    color: #333;
+    font-size: 2.5rem; /* Grande taille pour le titre de la page */
+    font-weight: 700;
+  }
+  
+  /* Styles pour les sections d'informations (informations personnelles, adresse, commandes) */
+  .profile-details,
+  .profile-orders {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px; /* Largeur maximale pour une meilleure lisibilité */
+    margin-bottom: 2rem; /* Espacement entre les sections */
+  }
+  
+  /* Titres des sous-sections */
+  .profile-details h2,
+  .profile-orders h2 {
+    color: #F2B705; /* Couleur d'accentuation de votre thème */
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 2px solid #eee; /* Ligne de séparation subtile */
+    padding-bottom: 0.75rem;
+  }
+  
+  /* Styles pour les paragraphes d'informations */
+  .profile-details p,
+  .profile-orders p {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+    color: #555;
+  }
+  
+  .profile-details strong,
+  .profile-orders strong {
+    color: #333; /* Texte plus sombre pour les labels */
+  }
+  
+  /* Styles des boutons */
+  .profile-button {
+    width: 100%;
+    max-width: 250px; /* Limite la largeur des boutons pour un meilleur aspect */
+    padding: 0.85rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 1rem; /* Espacement entre les boutons */
+    text-align: center;
+    text-decoration: none; /* Pour les liens stylisés comme des boutons */
+  }
+  
+  .edit-button {
+    background-color: #F2B705; /* Couleur primaire */
+    color: white;
+  }
+  
+  .edit-button:hover {
+    background-color: #d9a404; /* Assombrir au survol */
+    transform: translateY(-2px); /* Petit effet de soulèvement */
+  }
+  
+  .logout-button {
+    background-color: #e74c3c; /* Rouge pour la déconnexion */
+    color: white;
+  }
+  
+  .logout-button:hover {
+    background-color: #c0392b; /* Assombrir au survol */
+    transform: translateY(-2px);
+  }
+  
+  /* Styles pour les listes de commandes (si vous implémentez la liste) */
+  .profile-orders ul {
+    list-style: none; /* Supprime les puces */
+    padding: 0;
+  }
+  
+  .profile-orders li {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Message de chargement */
+  .profile-loading {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+    padding: 50px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .profile-details,
+    .profile-orders {
+      padding: 1.5rem;
+    }
+  
+    .profile-title {
+      font-size: 2rem;
+    }
+  
+    .profile-details h2,
+    .profile-orders h2 {
+      font-size: 1.3rem;
+    }
+  
+    .profile-button {
+      max-width: 100%; /* Les boutons prennent toute la largeur sur mobile */
+      padding: 1rem;
+    }
+  }
+  

@@ -21,9 +21,9 @@ export function AuthProvider({ children }) {
             },
           });
 
-          // Récupérer les infos utilisateur depuis la réponse sans 'username'
-          const { id, email, nom, prenom, role } = response.data; // <-- MODIFICATION ICI
-          setUser({ id, email, nom, prenom, role, token: storedToken }); // Mettre à jour l'état utilisateur sans username
+          // Récupérer toutes les infos utilisateur, y compris les adresses
+          const { id, email, nom, prenom, role, street_number, street_name, postal_code, city } = response.data; // <-- MODIFICATION ICI
+          setUser({ id, email, nom, prenom, role, street_number, street_name, postal_code, city, token: storedToken }); // Mettre à jour l'état utilisateur
         }
       } catch (err) {
         console.error("Erreur lors de la vérification du token JWT :", err.response?.data || err.message, err.toJSON ? err.toJSON() : err);
@@ -37,22 +37,23 @@ export function AuthProvider({ children }) {
     loadUserFromStorage();
   }, []); // Exécuté une seule fois au montage du composant
 
-  const signup = async (nom, prenom, email, password, role = 'user') => {
+  const signup = async (nom, prenom, email, password, street_number, street_name, postal_code, city, role = 'user') => { // <-- MODIFICATION DES PARAMÈTRES
     setError(''); // Réinitialise les erreurs précédentes
     try {
-      if (!nom || !prenom || !email || !password) {
-        throw new Error('Tous les champs requis (Nom, Prénom, Email, Mot de passe) sont requis.');
+      if (!nom || !prenom || !email || !password || !street_number || !street_name || !postal_code || !city) { // <-- Vérification des nouveaux champs
+        throw new Error('Tous les champs requis (Nom, Prénom, Email, Mot de passe, Adresse) sont requis.');
       }
-
-      // Plus besoin de créer un username ici
-      // const username = `${nom.toLowerCase()}.${prenom.toLowerCase()}`;
 
       await api.post('/register', {
         nom,
         prenom,
         email,
-        password_hash: password, // <-- Envoyer le mot de passe en clair pour qu'il soit haché côté backend
+        password_hash: password,
         role,
+        street_number, // <-- NOUVEAU CHAMP
+        street_name,   // <-- NOUVEAU CHAMP
+        postal_code,   // <-- NOUVEAU CHAMP
+        city           // <-- NOUVEAU CHAMP
       });
 
       return true; // Succès de l'inscription
@@ -77,7 +78,7 @@ export function AuthProvider({ children }) {
 
       const { token, user: userData } = response.data; // Le backend renvoie 'token' et un objet 'user'
       localStorage.setItem('accessToken', token);
-      setUser({ ...userData, token: token }); // userData ne contiendra plus username
+      setUser({ ...userData, token: token }); // userData contiendra maintenant les infos d'adresse
       
       return true; // Connexion réussie
     } catch (err) {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import './Login.css';
+import './Login.css'; // Assurez-vous d'avoir ce fichier CSS pour le style
 
 function Login() {
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -13,9 +13,13 @@ function Login() {
     email: '',     // Utilisé pour la connexion et l'inscription
     password: '',
     confirmPassword: '', // Utilisé seulement pour l'inscription
+    street_number: '', // <-- NOUVEAU CHAMP
+    street_name: '',   // <-- NOUVEAU CHAMP
+    postal_code: '',   // <-- NOUVEAU CHAMP
+    city: '',          // <-- NOUVEAU CHAMP
   });
   const [message, setMessage] = useState('');
-  const { login, signup, error, user } = useAuth();
+  const { login, signup, error, user, forgotPassword } = useAuth(); // Assurez-vous d'importer forgotPassword
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -47,7 +51,8 @@ function Login() {
         setIsForgotPasswordMode(false);
         setIsLoginMode(true);
         setFormData({ // Réinitialise le formulaire
-          nom: '', prenom: '', /* username: '', */ email: '', password: '', confirmPassword: '',
+          nom: '', prenom: '', email: '', password: '', confirmPassword: '',
+          street_number: '', street_name: '', postal_code: '', city: '',
         });
       } else {
         // L'erreur sera affichée par le `error` du contexte
@@ -59,17 +64,21 @@ function Login() {
         return;
       }
 
-      if (formData.nom.trim().length === 0 || formData.prenom.trim().length === 0) {
-        setMessage("Le nom et le prénom sont requis.");
+      if (!formData.nom.trim() || !formData.prenom.trim() || !formData.email.trim() || !formData.password.trim() ||
+          !formData.street_number.trim() || !formData.street_name.trim() || !formData.postal_code.trim() || !formData.city.trim()) {
+        setMessage("Tous les champs sont obligatoires.");
         return;
       }
 
-      // Appel de la fonction signup avec nom, prénom, email et mot de passe (sans username)
       const success = await signup(
         formData.nom.trim(),
         formData.prenom.trim(),
         formData.email,
         formData.password,
+        formData.street_number.trim(), // <-- NOUVEAU CHAMP
+        formData.street_name.trim(),   // <-- NOUVEAU CHAMP
+        formData.postal_code.trim(),   // <-- NOUVEAU CHAMP
+        formData.city.trim(),          // <-- NOUVEAU CHAMP
         'user'
       );
 
@@ -77,7 +86,8 @@ function Login() {
         setMessage("Compte créé avec succès ! Vous pouvez maintenant vous connecter.");
         setIsLoginMode(true);
         setFormData({ // Réinitialise le formulaire
-          nom: '', prenom: '', /* username: '', */ email: '', password: '', confirmPassword: '',
+          nom: '', prenom: '', email: '', password: '', confirmPassword: '',
+          street_number: '', street_name: '', postal_code: '', city: '',
         });
       } else {
         // L'erreur sera affichée par le `error` du contexte
@@ -157,8 +167,6 @@ function Login() {
                 required
               />
             </div>
-            {/* Le champ nom d'utilisateur (username) a été supprimé */}
-
             <div className="form-group">
               <label htmlFor="email">Email</label>
               <input
@@ -190,6 +198,56 @@ function Login() {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* NOUVEAUX CHAMPS D'ADRESSE */}
+            <div className="form-group">
+              <label htmlFor="street_number">Numéro de voie</label>
+              <input
+                type="text"
+                id="street_number"
+                name="street_number"
+                value={formData.street_number}
+                onChange={handleChange}
+                placeholder="Ex: 123"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="street_name">Nom de la voie</label>
+              <input
+                type="text"
+                id="street_name"
+                name="street_name"
+                value={formData.street_name}
+                onChange={handleChange}
+                placeholder="Ex: Rue de la Paix"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="postal_code">Code Postal</label>
+              <input
+                type="text"
+                id="postal_code"
+                name="postal_code"
+                value={formData.postal_code}
+                onChange={handleChange}
+                placeholder="Ex: 75001"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="city">Ville</label>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                placeholder="Ex: Paris"
                 required
               />
             </div>
@@ -228,7 +286,8 @@ function Login() {
             onClick={() => {
               setIsLoginMode(!isLoginMode);
               setFormData({ // Réinitialise le formulaire
-                nom: '', prenom: '', /* username: '', */ email: '', password: '', confirmPassword: '',
+                nom: '', prenom: '', email: '', password: '', confirmPassword: '',
+                street_number: '', street_name: '', postal_code: '', city: '',
               });
               setMessage('');
             }}
@@ -244,7 +303,7 @@ function Login() {
             onClick={() => {
               setIsForgotPasswordMode(true);
               setIsLoginMode(false);
-              setFormData({ nom: '', prenom: '', /* username: '', */ email: '', password: '', confirmPassword: '' });
+              setFormData({ nom: '', prenom: '', email: '', password: '', confirmPassword: '', street_number: '', street_name: '', postal_code: '', city: '' });
               setMessage('');
             }}
           >
@@ -259,7 +318,7 @@ function Login() {
             onClick={() => {
               setIsForgotPasswordMode(false);
               setIsLoginMode(true);
-              setFormData({ nom: '', prenom: '', /* username: '', */ email: '', password: '', confirmPassword: '' });
+              setFormData({ nom: '', prenom: '', email: '', password: '', confirmPassword: '', street_number: '', street_name: '', postal_code: '', city: '' });
               setMessage('');
             }}
           >
