@@ -1,14 +1,26 @@
+# front-end/resto/Dockerfile
 FROM node:18-alpine
 
 WORKDIR /app
 
+# Ajoutez le répertoire des binaires de Node.js au PATH du conteneur
+# Cela permet à la commande 'vite' d'être trouvée par le shell
+ENV PATH="/app/node_modules/.bin:$PATH"
+
+# Copiez package.json et package-lock.json en premier
+# Cela permet à Docker de mettre en cache cette étape si les dépendances n'ont pas changé
 COPY package*.json ./
 
-RUN npm install
+# Installez les dépendances DANS le conteneur en utilisant npm ci (Clean Install)
+# L'option --only=production=false est supprimée car elle est incorrecte.
+# npm ci installe par défaut les dépendances telles que définies dans package-lock.json
+RUN npm ci 
 
+# Copiez le reste du code source
 COPY . .
 
 EXPOSE 5173
 
-# Correction ici : Exécute la commande via /bin/sh -c pour une meilleure compatibilité
-CMD ["/bin/sh", "-c", "npm run dev -- --host 0.0.0.0"]
+# Exécute la commande de démarrage du serveur de développement Vite de manière plus directe
+# npm run dev trouvera maintenant 'vite' car node_modules/.bin est dans le PATH
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

@@ -4,10 +4,11 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci 
 
 COPY . .
 
 EXPOSE 5173
 
-CMD ["npm", "run", "dev", "--", "--host"]
+# Commande de débogage pour voir ce qui se passe
+CMD ["sh", "-c", "echo 'Contenu de node_modules/.bin:' && ls -la node_modules/.bin/ && echo 'PATH:' && echo $PATH && echo 'Tentative de lancement avec npx:' && npx vite --host 0.0.0.0"]

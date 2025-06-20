@@ -1,0 +1,8 @@
+# Entrez dans le conteneur
+docker exec -it votre-conteneur-name sh
+
+# Installez Vite
+npm install vite
+
+# Ou installez toutes les dépendances
+npm install

@@ -1,5 +1,5 @@
 // src/context/AuthContext.jsx
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react'; // <-- Ajout de useMemo
 import api from '../api/axios'; // <-- Importez l'instance axios configurée
 
 const AuthContext = createContext();
@@ -116,12 +116,17 @@ export function AuthProvider({ children }) {
     }
   };
 
+  // Memoize the context value to prevent unnecessary re-renders
+  const authContextValue = useMemo(() => ({
+    user, error, login, logout, signup, forgotPassword, setError, loading
+  }), [user, error, login, logout, signup, forgotPassword, setError, loading]); // <-- Dépendances de useMemo
+
   if (loading) {
     return <div>Chargement de l'authentification...</div>;
   }
 
   return (
-    <AuthContext.Provider value={{ user, error, login, logout, signup, forgotPassword, setError }}>
+    <AuthContext.Provider value={authContextValue}> {/* Utilise la valeur mémoisée */}
       {children}
     </AuthContext.Provider>
   );

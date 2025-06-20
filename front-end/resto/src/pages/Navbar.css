@@ -2,295 +2,293 @@
 
 /* --- Base de la Navbar --- */
 .navbar {
-    display: flex;
-    justify-content: space-between; /* Espace les éléments aux extrémités */
-    align-items: center;
-    flex-wrap: wrap; /* Permet aux éléments de s'enrouler sur les petits écrans */
-    
-    /* Box Model */
-    padding: 1rem 2rem;
-    
-    /* Couleurs et Ombres */
-    background-color: #F2B705; /* Couleur principale (Jaune vif) */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    
-    /* Typographie */
-    font-family: 'Inter', sans-serif;
-    
-    /* Positionnement */
-    position: sticky; /* Rendre la navbar "sticky" */
-    top: 0;
-    z-index: 1000;
-  }
+  display: flex;
+  justify-content: space-between; /* Espace les éléments aux extrémités */
+  align-items: center;
+  flex-wrap: wrap; /* Permet aux éléments de s'enrouler sur les petits écrans */
   
-  /* --- Sections de la Navbar (Début, Marque, Fin) --- */
+  /* Box Model */
+  padding: 1rem 2rem;
+  
+  /* Couleurs et Ombres */
+  background-color: #F2B705; /* Couleur principale (Jaune vif) */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  
+  /* Typographie */
+  font-family: 'Inter', sans-serif;
+  
+  /* Positionnement */
+  position: sticky; /* Rendre la navbar "sticky" */
+  top: 0;
+  z-index: 1000;
+}
+
+/* --- Sections de la Navbar (Début, Marque, Fin) --- */
+.navbar-start {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Alignement à gauche */
+  flex-grow: 0; /* Ne prend pas d'espace flexible excessif */
+}
+
+.navbar-brand {
+  display: flex; /* Permet d'aligner l'icône et le texte */
+  align-items: center; /* Aligne verticalement l'icône et le texte */
+  gap: 0.5rem; /* Espace entre l'icône et le texte */
+  
+  /* Typographie */
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: black; /* Texte en noir */
+  text-decoration: none;
+  
+  /* Positionnement */
+  flex-shrink: 0; /* Empêche la réduction du logo */
+  margin-left: auto;   /* <-- AJOUTÉ: Pousse le logo vers la droite */
+  margin-right: auto;  /* <-- AJOUTÉ: Pousse le logo vers la gauche, le centrant ainsi */
+  
+  /* Transition */
+  transition: color 0.3s ease;
+}
+
+.navbar-brand:hover {
+  color: #555555; /* Assombrir légèrement au survol */
+}
+
+.navbar-end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Alignement à droite */
+  
+  /* Box Model */
+  gap: 1.5rem; /* Espacement entre les éléments de navigation */
+  flex-grow: 0; /* Ne prend pas d'espace flexible excessif */
+}
+
+/* --- Éléments de la Navbar (Liens, Boutons) --- */
+.navbar-item {
+  display: flex; /* Pour aligner le contenu des items (texte/icônes) */
+  align-items: center; /* Pour aligner le contenu des items */
+  justify-content: center; /* Pour centrer le contenu horizontalement */
+  white-space: nowrap; /* Empêche le texte de se casser sur plusieurs lignes */
+
+  /* Typographie */
+  color: black; /* Texte en noir */
+  text-decoration: none;
+  font-size: 1rem;
+  
+  /* Box Model */
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  
+  /* Transition */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar-item:hover {
+  background-color: rgba(0, 0, 0, 0.1); /* Fond semi-transparent noir au survol */
+  color: white; /* Texte en blanc au survol */
+}
+
+/* --- Boutons de Profil et Déconnexion --- */
+.navbar-item.profile-button {
+  background-color: black; /* Fond noir */
+  color: white; /* Texte blanc */
+  border: 1px solid black; /* Bordure noire */
+  padding: 0.4rem 1rem; /* Diminution de la taille */
+  border-radius: 20px; /* Bords plus arrondis */
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem; /* Diminution de la taille de la police */
+}
+
+.navbar-item.profile-button:hover {
+  background-color: #333333; /* Fond noir plus foncé au survol */
+  color: #F2B705; /* Texte en jaune au survol */
+  border-color: #333333;
+}
+
+.navbar-item.logout-button {
+  background-color: #e74c3c; /* Fond rouge */
+  color: white; /* Texte blanc */
+  border: none; /* Pas de bordure pour un look plus solide */
+  width: 40px; /* Taille fixe pour le bouton icône */
+  height: 40px; /* Taille fixe pour le bouton icône */
+  border-radius: 50%; /* Bouton circulaire */
+  display: flex; /* Centrage de l'icône */
+  align-items: center; /* Centrage de l'icône */
+  justify-content: center; /* Centrage de l'icône */
+  cursor: pointer;
+}
+
+.navbar-item.logout-button i { /* Style pour l'icône à l'intérieur du bouton */
+    font-size: 1.2rem; /* Taille de l'icône */
+}
+
+.navbar-item.logout-button:hover {
+  background-color: #c0392b; /* Rouge plus foncé au survol */
+  color: white; /* Texte en blanc au survol */
+}
+
+/* --- Icône Panier --- */
+.navbar-item.cart-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-item.cart-icon .cart-count { /* Pour le compteur du panier */
+  /* Box Model */
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 20px; /* Assure que le cercle est assez grand */
+  padding: 0.2rem 0.5rem;
+  border-radius: 50%;
+  
+  /* Couleurs */
+  background-color: #e74c3c; /* Rouge pour le compteur */
+  color: white;
+  
+  /* Typographie */
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* --- Bouton Menu Hamburger (Mobile) --- */
+.menu-toggle {
+  background: none;
+  border: none;
+  color: black; /* Texte en noir */
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 0;
+  display: none; /* Caché par défaut sur grand écran */
+}
+
+/* --- Menu Déroulant (Mobile) --- */
+.dropdown-menu {
+  display: none; /* Caché par défaut */
+  position: absolute;
+  top: 100%; /* Juste en dessous de la navbar */
+  left: 0;
+  width: 100%; /* Prend toute la largeur */
+  
+  /* Couleurs et Ombres */
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  border-radius: 0 0 8px 8px; /* Coins inférieurs arrondis */
+  
+  /* Box Model */
+  padding: 1rem 0;
+  
+  /* Positionnement */
+  z-index: 999; /* Moins que la navbar, mais au-dessus du contenu */
+}
+
+.dropdown-menu.show {
+  display: flex;
+  flex-direction: column; /* Organise les éléments verticalement */
+}
+
+.dropdown-menu .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  text-align: left;
+  
+  /* Typographie */
+  color: black; /* Texte en noir */
+  text-decoration: none;
+  font-size: 1rem;
+  
+  /* Box Model */
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  
+  /* Interaction */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+
+/* --- Email Utilisateur (masqué sur desktop car non demandé) --- */
+.user-email {
+  font-size: 0.9rem;
+  color: black; /* Texte en noir */
+  display: none; /* Masqué par défaut sur desktop aussi */
+  align-items: center;
+}
+
+/* --- Media Queries pour la Réactivité --- */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: row; /* Maintenir les éléments sur une ligne */
+    justify-content: space-between; /* Les espacer */
+    padding: 0.75rem 1rem;
+  }
+
   .navbar-start {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Alignement à gauche */
-    flex-grow: 0; /* Ne prend plus d'espace flexible excessif */
-    margin-right: auto; /* Pousse le contenu (brand et end) vers la droite */
+    flex-grow: 0;
+    margin-right: 0; /* Réinitialise la marge auto sur mobile */
   }
-  
-  .navbar-brand {
-    display: flex; /* Permet d'aligner l'icône et le texte */
-    align-items: center; /* Aligne verticalement l'icône et le texte */
-    gap: 0.5rem; /* Espace entre l'icône et le texte */
-    
-    /* Typographie */
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: black; /* Texte en noir */
-    text-decoration: none;
-    
-    /* Positionnement */
-    flex-shrink: 0; /* Empêche la réduction du logo */
-    
-    /* Transition */
-    transition: color 0.3s ease;
-  }
-  
-  .navbar-brand:hover {
-    color: #555555; /* Assombrir légèrement au survol */
-  }
-  
+
   .navbar-end {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end; /* Alignement à droite */
-    
-    /* Box Model */
-    gap: 1.5rem; /* Espacement entre les éléments de navigation */
-    flex-grow: 0; /* Ne prend plus d'espace flexible excessif */
-    margin-left: auto; /* Pousse le contenu (start et brand) vers la gauche */
+    flex-grow: 0;
+    gap: 0.75rem; /* Ajuster l'espacement */
+    margin-left: 0; /* Réinitialise la marge auto sur mobile */
   }
-  
-  /* --- Éléments de la Navbar (Liens, Boutons) --- */
-  .navbar-item {
-    display: flex; /* Pour aligner le contenu des items (texte/icônes) */
-    align-items: center; /* Pour aligner le contenu des items */
-    justify-content: center; /* Pour centrer le contenu horizontalement */
-    white-space: nowrap; /* Empêche le texte de se casser sur plusieurs lignes */
-  
-    /* Typographie */
-    color: black; /* Texte en noir */
-    text-decoration: none;
-    font-size: 1rem;
-    
-    /* Box Model */
-    padding: 0.5rem 0.75rem;
-    border-radius: 4px;
-    
-    /* Transition */
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .navbar-item:hover {
-    background-color: rgba(0, 0, 0, 0.1); /* Fond semi-transparent noir au survol */
-    color: white; /* Texte en blanc au survol */
-  }
-  
-  /* --- Boutons de Profil et Déconnexion --- */
-  .navbar-item.profile-button {
-    background-color: black; /* Fond noir */
-    color: white; /* Texte blanc */
-    border: 1px solid black; /* Bordure noire */
-    padding: 0.4rem 1rem; /* Diminution de la taille */
-    border-radius: 20px; /* Bords plus arrondis */
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 0.9rem; /* Diminution de la taille de la police */
-  }
-  
-  .navbar-item.profile-button:hover {
-    background-color: #333333; /* Fond noir plus foncé au survol */
-    color: #F2B705; /* Texte en jaune au survol */
-    border-color: #333333;
-  }
-  
-  .navbar-item.logout-button {
-    background-color: #e74c3c; /* Fond rouge */
-    color: white; /* Texte blanc */
-    border: none; /* Pas de bordure pour un look plus solide */
-    width: 40px; /* Taille fixe pour le bouton icône */
-    height: 40px; /* Taille fixe pour le bouton icône */
-    border-radius: 50%; /* Bouton circulaire */
-    display: flex; /* Centrage de l'icône */
-    align-items: center; /* Centrage de l'icône */
-    justify-content: center; /* Centrage de l'icône */
-    cursor: pointer;
-  }
-  
-  .navbar-item.logout-button i { /* Style pour l'icône à l'intérieur du bouton */
-      font-size: 1.2rem; /* Taille de l'icône */
-  }
-  
-  .navbar-item.logout-button:hover {
-    background-color: #c0392b; /* Rouge plus foncé au survol */
-    color: white; /* Texte en blanc au survol */
-  }
-  
-  /* --- Icône Panier --- */
-  .navbar-item.cart-icon {
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-  
-  .navbar-item.cart-icon .cart-count { /* Pour le compteur du panier */
-    /* Box Model */
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    min-width: 20px; /* Assure que le cercle est assez grand */
-    padding: 0.2rem 0.5rem;
-    border-radius: 50%;
-    
-    /* Couleurs */
-    background-color: #e74c3c; /* Rouge pour le compteur */
-    color: white;
-    
-    /* Typographie */
-    font-size: 0.75rem;
-    font-weight: bold;
+
+  .navbar-brand {
+    font-size: 1.5rem; /* Réduire la taille du titre sur mobile */
+    flex-grow: 0;
     text-align: center;
+    margin-left: auto; /* <-- NOUVEAU: Centrage sur mobile */
+    margin-right: auto; /* <-- NOUVEAU: Centrage sur mobile */
   }
-  
-  /* --- Bouton Menu Hamburger (Mobile) --- */
+
   .menu-toggle {
-    background: none;
-    border: none;
-    color: black; /* Texte en noir */
-    font-size: 1.5em;
-    cursor: pointer;
-    padding: 0;
-    display: none; /* Caché par défaut sur grand écran */
+    display: block; /* Afficher le bouton menu sur mobile */
+    order: -1; /* Placer le toggle à l'extrême gauche */
   }
-  
-  /* --- Menu Déroulant (Mobile) --- */
-  .dropdown-menu {
-    display: none; /* Caché par défaut */
-    position: absolute;
-    top: 100%; /* Juste en dessous de la navbar */
-    left: 0;
-    width: 100%; /* Prend toute la largeur */
-    
-    /* Couleurs et Ombres */
-    background-color: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    border-radius: 0 0 8px 8px; /* Coins inférieurs arrondis */
-    
-    /* Box Model */
-    padding: 1rem 0;
-    
-    /* Positionnement */
-    z-index: 999; /* Moins que la navbar, mais au-dessus du contenu */
-  }
-  
-  .dropdown-menu.show {
-    display: flex;
-    flex-direction: column; /* Organise les éléments verticalement */
-  }
-  
-  .dropdown-menu .dropdown-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    width: 100%;
-    text-align: left;
-    
-    /* Typographie */
-    color: black; /* Texte en noir */
-    text-decoration: none;
-    font-size: 1rem;
-    
-    /* Box Model */
-    padding: 12px 16px;
-    border: none;
-    background: none;
-    
-    /* Interaction */
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .dropdown-menu .dropdown-item:hover {
-    background-color: #f5f5f5;
-  }
-  
-  /* --- Email Utilisateur (masqué sur desktop car non demandé) --- */
+
   .user-email {
+    display: none; /* Masquer l'email de l'utilisateur sur mobile (déjà masqué par défaut) */
+  }
+
+  /* Masque les éléments .desktop-only par défaut sur les petits écrans */
+  .desktop-only {
+    display: none !important;
+  }
+
+  /* Cache les liens de navigation "normaux" sur mobile (ils sont dans le dropdown) */
+  .navbar-item:not(.cart-icon):not(.profile-button):not(.logout-button) {
+    display: none;
+  }
+
+  /* Ajuste le padding et la taille des boutons sur mobile */
+  .navbar-item.profile-button,
+  .navbar-item.logout-button {
+    padding: 0.5rem 1rem;
     font-size: 0.9rem;
-    color: black; /* Texte en noir */
-    display: none; /* Masqué par défaut sur desktop aussi */
-    align-items: center;
   }
-  
-  /* --- Media Queries pour la Réactivité --- */
-  @media (max-width: 768px) {
-    .navbar {
-      flex-direction: row; /* Maintenir les éléments sur une ligne */
-      justify-content: space-between; /* Les espacer */
-      padding: 0.75rem 1rem;
-    }
-  
-    .navbar-start {
-      flex-grow: 0;
-      margin-right: 0; /* Réinitialise la marge auto sur mobile */
-    }
-  
-    .navbar-end {
-      flex-grow: 0;
-      gap: 0.75rem; /* Ajuster l'espacement */
-      margin-left: 0; /* Réinitialise la marge auto sur mobile */
-    }
-  
-    .navbar-brand {
-      font-size: 1.5rem; /* Réduire la taille du titre sur mobile */
-      flex-grow: 0; /* <-- MODIFIÉ : Ne prend plus d'espace flexible excessif sur mobile */
-      text-align: center;
-      margin-left: 10px; /* <-- NOUVEAU : Pousse "Chez Khadija" vers la droite sur mobile */
-    }
-  
-    .menu-toggle {
-      display: block; /* Afficher le bouton menu sur mobile */
-      order: -1; /* Placer le toggle à l'extrême gauche */
-    }
-  
-    .user-email {
-      display: none; /* Masquer l'email de l'utilisateur sur mobile (déjà masqué par défaut) */
-    }
-  
-    /* Masque les éléments .desktop-only par défaut sur les petits écrans */
-    .desktop-only {
-      display: none !important;
-    }
-  
-    /* Cache les liens de navigation "normaux" sur mobile (ils sont dans le dropdown) */
-    .navbar-item:not(.cart-icon):not(.profile-button):not(.logout-button) {
-      display: none;
-    }
-  
-    /* Ajuste le padding et la taille des boutons sur mobile */
-    .navbar-item.profile-button,
-    .navbar-item.logout-button {
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-    }
-  
-    .dropdown-menu {
-      border-radius: 0;
-      padding: 0;
-    }
+
+  .dropdown-menu {
+    border-radius: 0;
+    padding: 0;
   }
-  
-  /* Règle pour afficher les éléments .desktop-only sur les écrans plus grands que 768px */
-  @media (min-width: 769px) {
-    .desktop-only {
-      display: flex !important; /* Ou 'block', 'inline-block' selon le type d'élément. 'flex' pour les boutons avec icônes. */
-    }
-    .navbar-brand { /* <-- NOUVEAU : Réinitialise la marge pour le desktop */
-      margin-left: 0;
-    }
+}
+
+/* Règle pour afficher les éléments .desktop-only sur les écrans plus grands que 768px */
+@media (min-width: 769px) {
+  .desktop-only {
+    display: flex !important; /* Ou 'block', 'inline-block' selon le type d'élément. 'flex' pour les boutons avec icônes. */
   }
-  
+  /* Pas besoin de margin-left spécifique ici, margin: auto va gérer le centrage */
+}

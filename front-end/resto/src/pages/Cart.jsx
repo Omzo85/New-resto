@@ -1,92 +1,72 @@
-// src/pages/Cart.jsx
 import React from 'react';
 import { useCart } from '../context/CartContext';
-import { useNavigate } from 'react-router-dom';
-import './Cart.css'; // Assurez-vous d'avoir ce fichier CSS pour le style
+import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
+import './Cart.css';
 
 function Cart() {
-  const { cartItems, getCartTotal, getCartCount, updateQuantity, removeFromCart, clearCart, cartError } = useCart();
-  const navigate = useNavigate();
+  const { cartItems, removeFromCart, updateQuantity, getCartTotal } = useCart();
+  const { user } = useAuth();
 
-  // Redirige vers la page d'accueil si le panier est vide après un court délai
-  // Désactivé temporairement pour le débogage si vous voulez voir un panier vide
-  // useEffect(() => {
-  //   if (cartItems.length === 0 && !cartError) {
-  //     const timer = setTimeout(() => {
-  //       navigate('/');
-  //     }, 1000); // Redirige après 1 seconde si le panier est vide
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [cartItems, cartError, navigate]);
-
-
-  const handleUpdateQuantity = (dishId, newQuantity) => {
-    console.log(`Cart.jsx: Demande de mise à jour de quantité pour plat ${dishId} à ${newQuantity}`);
-    updateQuantity(dishId, newQuantity);
-  };
-
-  const handleRemoveFromCart = (dishId) => {
-    console.log(`Cart.jsx: Demande de suppression pour plat ${dishId}`);
-    removeFromCart(dishId);
-  };
-
-  const handleClearCart = () => {
-    console.log("Cart.jsx: Demande de vidage du panier.");
-    clearCart();
-  };
-
-  const handleCheckout = () => {
-    // Logique pour passer à la page de paiement ou de confirmation
-    console.log("Cart.jsx: Procéder au paiement.");
-    navigate('/checkout'); // Assurez-vous d'avoir une route /checkout
-  };
+  if (cartItems.length === 0) {
+    return (
+      <div className="empty-cart">
+        <i className="fas fa-shopping-cart fa-3x"></i>
+        <h2>Votre panier est vide</h2>
+        <p>Découvrez nos délicieux plats et ajoutez-les à votre panier</p>
+        <Link to="/" className="continue-shopping">
+          Voir le menu
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="cart-container">
       <h1>Votre Panier</h1>
-
-      {cartError && <div className="cart-error-message">{cartError}</div>}
-
-      {cartItems.length === 0 ? (
-        <div className="empty-cart">
-          <p>Votre panier est vide. <br/> <button onClick={() => navigate('/')} className="back-to-menu-button">Retour au menu</button></p>
-        </div>
-      ) : (
-        <div className="cart-content">
-          <div className="cart-items-list">
-            {cartItems.map(item => (
-              <div key={item.dishId} className="cart-item">
-                <img src={item.image || `https://placehold.co/100x100?text=${item.name.substring(0,5)}`} alt={item.name} className="cart-item-image" />
-                <div className="cart-item-details">
-                  <h3>{item.name}</h3>
-                  <p className="cart-item-price">{item.price.toFixed(2)}€ / unité</p>
-                  <p className="cart-item-total">Total: {(item.price * item.quantity).toFixed(2)}€</p>
-                </div>
-                <div className="cart-item-quantity-controls">
-                  <button onClick={() => handleUpdateQuantity(item.dishId, item.quantity - 1)} className="quantity-button">-</button>
-                  <span className="item-quantity">{item.quantity}</span>
-                  <button onClick={() => handleUpdateQuantity(item.dishId, item.quantity + 1)} className="quantity-button">+</button>
-                </div>
-                <button onClick={() => handleRemoveFromCart(item.dishId)} className="remove-item-button">X</button>
+      <div className="cart-items">
+        {cartItems.map((item) => (
+          <div key={item.id} className="cart-item">
+            <img src={item.image} alt={item.name} className="cart-item-image" />
+            <div className="cart-item-details">
+              <h3>{item.name}</h3>
+              <p className="cart-item-description">{item.description}</p>
+              <p className="cart-item-price">{item.price.toFixed(2)}€</p>
+            </div>
+            <div className="cart-item-actions">
+              <div className="quantity-controls">
+                <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+                <span>{item.quantity}</span>
+                <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
               </div>
-            ))}
+              <button 
+                className="remove-item"
+                onClick={() => removeFromCart(item.id)}
+              >
+                <i className="fas fa-trash"></i>
+              </button>
+            </div>
           </div>
-
-          <div className="cart-summary">
-            <h2>Résumé du Panier</h2>
-            <p>Nombre d'articles: <strong>{getCartCount()}</strong></p>
-            <p>Sous-total: <strong>{getCartTotal().toFixed(2)}€</strong></p>
-            {/* Vous pouvez ajouter les frais de livraison ici */}
-            <p className="cart-total">Total à payer: <strong>{getCartTotal().toFixed(2)}€</strong></p>
-            <button onClick={handleCheckout} className="checkout-button">
-              Passer la Commande
-            </button>
-            <button onClick={handleClearCart} className="clear-cart-button">
-              Vider le Panier
-            </button>
-          </div>
+        ))}
+      </div>
+      <div className="cart-summary">
+        <div className="cart-total">
+          <span>Total</span>
+          <span>{getCartTotal().toFixed(2)}€</span>
         </div>
-      )}
+        {user ? (
+          <button className="checkout-button">
+            Procéder au paiement
+          </button>
+        ) : (
+          <Link to="/login" className="checkout-button" style={{ textAlign: 'center', textDecoration: 'none' }}>
+            Se connecter pour payer
+          </Link>
+        )}
+        <Link to="/" className="continue-shopping">
+          Continuer les achats
+        </Link>
+      </div>
     </div>
   );
 }
